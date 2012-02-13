@@ -6,9 +6,6 @@ require_once APP_DIR.'app_exception.php';
 
 require_once HELPERS_DIR.'html_helper.php';
 
-// config
-require_once CONFIG_DIR.'core.php';
-
 // autoload
 spl_autoload_register(function($name) {
     $filename = Inflector::underscore($name) . '.php';
