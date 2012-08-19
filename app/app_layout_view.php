@@ -1,8 +1,15 @@
 <?php
+/**
+ * CakePHP-like view class for DietCake
+ *
+ * @license MIT License
+ * @author Tatsuya Tsuruoka <http://github.com/ttsuruoka>
+ * @link https://github.com/dietcake/dietcake-showcase
+ */
+
 class AppLayoutView extends View
 {
-    public $layout = 'default';
-    public static $ext = '.php';
+    public $layout = 'layouts/default';
 
     public function render($action = null)
     {
@@ -13,17 +20,15 @@ class AppLayoutView extends View
         } else {
             $view_filename = VIEWS_DIR . $action . self::$ext;
         }
-        $content = static::extract($view_filename, $this->vars);
+        $content = self::extractAndMerge($view_filename, $this->vars);
 
         // render layout
-        $layout_filename = VIEWS_DIR . 'layouts/' . $this->layout . self::$ext;
-        $vars = array(
-            '_content_' => $content,
-        );
-        $this->controller->output .= static::extract($layout_filename, array_merge($this->vars, $vars));
+        $layout_filename = VIEWS_DIR . $this->layout . self::$ext;
+        $this->vars['_content_'] = $content;
+        $this->controller->output .= self::extractAndMerge($layout_filename, $this->vars);
     }
 
-    public static function extract($_filename, &$_vars)
+    protected static function extractAndMerge($_filename, &$_vars)
     {
         if (!file_exists($_filename)) {
             throw new DCException("{$_filename} is not found");
